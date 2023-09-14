@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -29,7 +30,11 @@ public class PlayerScript : MonoBehaviour
     public GameObject startPos;
     private GameObject target;
     private GameObject destination;
-    private bool hasWeapon = true;     
+    private bool hasWeapon = true;  
+    public Image oxygenBar;
+    public float oxygenMax = 10f;
+    private float currentOxy;
+    private GameObject bottle;
 
     void Awake()
     {
@@ -37,6 +42,7 @@ public class PlayerScript : MonoBehaviour
         controller = GetComponent<CharacterController>();
         weaponRb = weapon.GetComponent<Rigidbody>();
         weaponRb.isKinematic = true;
+        currentOxy = oxygenMax;
     }
     
     void FixedUpdate()
@@ -44,7 +50,17 @@ public class PlayerScript : MonoBehaviour
        Gravity();
        PlayerMovement();
        ObjMove();
-       print(bubble);
+       
+       if (!bubble)
+        {
+            decayOxy();
+        }
+
+        if(currentOxy<=0)
+        {
+            //SceneManager.LoadScene(2);
+            print("dead");
+        }
     }
 
     public void onMove(InputAction.CallbackContext context)
@@ -158,19 +174,56 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider col)
+    
+
+    void OnTriggerEnter(Collider col)
     {
         if(col.gameObject.CompareTag("bubble"))
         {
+            print("touching a bubble");
+            if(!bubble)
+            {
             bubble = true;
-        }else{ 
-            bubble = false;
+            }
+            currentOxy = 10;
+            oxygenBar.fillAmount = currentOxy/oxygenMax;
+        }
+
+        if(col.gameObject.CompareTag("gas"))
+        {
+            currentOxy += 4;
+            bottle = col.gameObject;
+            bottle.SetActive(false);
+            StartCoroutine(ReturnObjToPool(col.gameObject));
         }
     }
 
     private void OnTriggerExit(Collider col)
     {
         bubble = false;
+    }
+
+    
+    private void decayOxy()
+    {
+        currentOxy -= Time.deltaTime;
+        oxygenBar.fillAmount = currentOxy/oxygenMax;
+        currentOxy = Mathf.Clamp(currentOxy,0,oxygenMax);
+    }
+
+    // private void OnCollisionEnter(Collision col)
+    // {
+        
+    // }
+
+    IEnumerator ReturnObjToPool(GameObject obj)
+    {
+        yield return new WaitForSeconds(10);
+
+        if(obj != null)
+        {
+            obj.SetActive(true);
+        }
     }
 
     private void OnEnable()
