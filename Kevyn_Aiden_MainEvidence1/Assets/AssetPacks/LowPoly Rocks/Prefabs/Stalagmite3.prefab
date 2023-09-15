@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 243653983}
   - component: {fileID: 243653982}
   - component: {fileID: 243653981}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Stalagmite3
-  m_TagString: Untagged
+  m_TagString: ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
