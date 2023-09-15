@@ -61,7 +61,7 @@ public class PlayerScript : MonoBehaviour
 
         if(currentOxy<=0)
         {
-            //SceneManager.LoadScene(2);
+            SceneManager.LoadScene(1);
             print("dead");
         }
     }
@@ -210,7 +210,12 @@ public class PlayerScript : MonoBehaviour
 
         if(col.gameObject.CompareTag("KILL"))
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
+        }
+
+        if(col.gameObject.CompareTag("win"))
+        {
+            SceneManager.LoadScene(2);
         }
     }
 
