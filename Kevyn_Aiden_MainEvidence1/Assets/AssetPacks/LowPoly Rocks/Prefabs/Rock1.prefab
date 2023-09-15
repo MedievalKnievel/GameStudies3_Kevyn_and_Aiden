@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 128935686}
   - component: {fileID: 128935685}
   - component: {fileID: 128935684}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rock1
-  m_TagString: Untagged
+  m_TagString: ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

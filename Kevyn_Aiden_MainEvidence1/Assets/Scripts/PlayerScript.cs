@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
-    public float speed = 5.0f;
+    public float speed = 8.0f;
     public float weaponSpeed = 10f;
     public float jumpForce = 1.0f;
     private Vector2 movementInput;
@@ -43,6 +44,8 @@ public class PlayerScript : MonoBehaviour
         weaponRb = weapon.GetComponent<Rigidbody>();
         weaponRb.isKinematic = true;
         currentOxy = oxygenMax;
+        target = weapon;
+        destination = player;
     }
     
     void FixedUpdate()
@@ -58,7 +61,7 @@ public class PlayerScript : MonoBehaviour
 
         if(currentOxy<=0)
         {
-            //SceneManager.LoadScene(2);
+            SceneManager.LoadScene(1);
             print("dead");
         }
     }
@@ -141,7 +144,7 @@ public class PlayerScript : MonoBehaviour
         }
         if(!bubble)
         {
-            fallspeed = -5f;
+            fallspeed = -20f;
         }
         if(grounded && velocity.y < 0)
         {
@@ -169,9 +172,17 @@ public class PlayerScript : MonoBehaviour
             bubble = false;
             hasWeapon = true;
          }
-    
-
         }
+        if(Vector3.Distance(target.transform.position, destination.transform.position) > 50f)
+         {
+            weapon.transform.position = startPos.transform.position;
+            weapon.transform.rotation = startPos.transform.rotation;
+            weapon.transform.SetParent(cam.transform);
+            weaponRb.isKinematic = true;
+            pull = false;
+            controller.enabled = true;
+            hasWeapon = true;
+         }
     }
 
     
@@ -191,10 +202,20 @@ public class PlayerScript : MonoBehaviour
 
         if(col.gameObject.CompareTag("gas"))
         {
-            currentOxy += 4;
+            currentOxy += 10;
             bottle = col.gameObject;
             bottle.SetActive(false);
             StartCoroutine(ReturnObjToPool(col.gameObject));
+        }
+
+        if(col.gameObject.CompareTag("KILL"))
+        {
+            SceneManager.LoadScene(1);
+        }
+
+        if(col.gameObject.CompareTag("win"))
+        {
+            SceneManager.LoadScene(2);
         }
     }
 
@@ -218,7 +239,7 @@ public class PlayerScript : MonoBehaviour
 
     IEnumerator ReturnObjToPool(GameObject obj)
     {
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(5);
 
         if(obj != null)
         {
