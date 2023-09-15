@@ -46,13 +46,14 @@ public class loadNextScene : MonoBehaviour
     
     public void ReturnToMenuFromWin()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex -3);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex -2);
     } 
     
     public void QuitGame()
     {
         
         Application.Quit();
+        print("Quit");
     }
 
 

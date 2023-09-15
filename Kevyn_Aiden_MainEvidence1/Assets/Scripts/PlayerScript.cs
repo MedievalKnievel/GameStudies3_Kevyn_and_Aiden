@@ -216,6 +216,7 @@ public class PlayerScript : MonoBehaviour
         if(col.gameObject.CompareTag("win"))
         {
             SceneManager.LoadScene(2);
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 
